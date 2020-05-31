@@ -1,0 +1,150 @@
+@import utils.UserSortType
+@(events: List[models.Event], totalEventCount: Integer, userCount: Integer, newMessagesCount: Integer)
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="author" content="ResearchIME Project">
+        <title>ResearchIME</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="@routes.Assets.versioned("apple-touch-icon.png")">
+        <link rel="icon" type="image/png" href="@routes.Assets.versioned("favicon-32x32.png")">
+        <link rel="manifest" href="@routes.Assets.versioned("manifest.json")">
+        <link href="@routes.Assets.versioned("css/font-awesome.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/bootstrap.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/mdb.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/cms.css")" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <header>
+            <nav class="navbar navbar-dark default-color-dark">
+                <a class="hidden-sm-up navbar-brand" style="float: none;" href="@routes.CmsDashboardController.index">ResearchIME</a>
+                <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#collapseMenu">
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                @partials.header(null)
+            </nav>
+        </header>
+
+        <main>
+            <div class="container">
+                <div class="row">
+
+                    <div class="block">
+                        <a href="#events" class="black-text">
+                            <div class="card-block col-lg-4 col-md-6">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-database fa-2x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <h4>@totalEventCount Events</h4>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="block">
+                        <a href="@routes.CmsUserController.getUsers" class="black-text">
+                            <div class="card-block col-lg-4 col-md-6">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-user fa-2x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <h4>@userCount User</h4>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    @if(newMessagesCount > 0) {
+                        <div class="block">
+                            <a href="@routes.CmsUserController.getUsers?sort=@UserSortType.NEWS.abbreviation" class="black-text">
+                                <div class="card-block col-lg-4 col-md-6">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-comment-o fa-2x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                    @if(newMessagesCount == 1) {
+                                        <h4>One new message</h4>
+                                    } else {
+                                        <h4>@newMessagesCount new messages</h4>
+                                    }
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+
+                </div>
+
+                <h4 class="mt-2 h3-responsive">Events</h4>
+                <hr>
+                <a name="events"></a>
+
+                <div class="card table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>User</th>
+                                <th>Input-Event</th>
+                                <th>Input-Mode</th>
+                                <th>Hand-Posture</th>
+                                <th>Private</th>
+                                <th>Anonym</th>
+                                <th>Length</th>
+                                <th>Key-Code</th>
+                                <th>x</th>
+                                <th>y</th>
+                                <th>Package-Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @for(event <- events) {
+                            <tr>
+                                <td>@event.getDayStamp<br>@event.getTimeStamp</td>
+                                <td><a href="@routes.CmsUserController.index(event.userUuid)">@event.getShortUserId</a></td>
+                                <td>@event.getType</td>
+                                <td>@event.inputMode</td>
+                                <td>@event.handPosture</td>
+                                <td>
+                                @if(event.isInPrivateMode) {
+                                    <i class="fa fa-lock"></i>
+                                } else {
+                                    <i class="fa fa-unlock"></i>
+                                }
+                                </td>
+                                @if(event.anonymized) {
+                                    <td>Yes</td>
+                                } else {
+                                    <td>No</td>
+                                }
+                                <td>@event.contentLength</td>
+                                @if(event.anonymized) {
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                } else {
+                                    <td>@event.code</td>
+                                    <td>@event.x</td>
+                                    <td>@event.y</td>
+                                }
+                                <td>@event.fieldPackageName</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+
+        <script type="text/javascript" src="@routes.Assets.versioned("js/jquery.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/tether.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/bootstrap.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/mdb.min.js")"></script>
+    </body>
+
+</html>

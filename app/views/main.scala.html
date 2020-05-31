@@ -1,0 +1,16 @@
+@(title: String)(content: Html)
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>@title</title>
+        <link href='//fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("css/main.css")">
+        <link rel="apple-touch-icon" sizes="180x180" href="@routes.Assets.versioned("apple-touch-icon.png")">
+        <link rel="icon" type="image/png" href="@routes.Assets.versioned("favicon-32x32.png")">
+        <link rel="manifest" href="@routes.Assets.versioned("manifest.json")">
+    </head>
+    <body>
+        @content
+    </body>
+</html>

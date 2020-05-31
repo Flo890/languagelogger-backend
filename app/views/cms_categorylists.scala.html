@@ -1,0 +1,106 @@
+@import models.wordlists.CategoryBaseList
+@import models.wordlists.LogicalCategoryList
+@import models.PageGroupConstants
+@(baselists: List[CategoryBaseList], logicallists: List[LogicalCategoryList])
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="author" content="ResearchIME Project">
+        <title>ResearchIME</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="@routes.Assets.versioned("apple-touch-icon.png")">
+        <link rel="icon" type="image/png" href="@routes.Assets.versioned("favicon-32x32.png")">
+        <link rel="manifest" href="@routes.Assets.versioned("manifest.json")">
+        <link href="@routes.Assets.versioned("css/font-awesome.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/bootstrap.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/mdb.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/cms.css")" rel="stylesheet">
+    </head>
+    <body>
+    <header>
+        <nav class="navbar navbar-dark default-color-dark">
+            <a class="hidden-sm-up navbar-brand" style="float: none;" href="@routes.CmsDashboardController.index">
+                ResearchIME</a>
+            <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#collapseMenu">
+                <i class="fa fa-bars"></i>
+            </button>
+
+            @partials.header(PageGroupConstants.CATEGORYLISTS)
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            @if(flash.contains("success")) {
+            <div class="card card-success">
+                <div class="card-block">
+                    <h4 class="m-0 white-text">@flash.get("success")</h4>
+                </div>
+            </div>
+            <hr>
+            }
+            @if(flash.contains("error")) {
+            <div class="card card-danger">
+                <div class="card-block">
+                    <h4 class="m-0 white-text">@flash.get("error")</h4>
+                </div>
+            </div>
+            <hr>
+            }
+
+            <h4 class="h4-responsive">(physical) Category Baselists</h4>
+            <p>Physical lists are the raw, imported word category lists, e.g. a LIWC dictionary</p>
+            <hr>
+            <div class="row">
+                @for(baselist <- baselists) {
+                <div class="col-lg-4">
+                    <a href="@routes.CmsCategoryListController.getBaselistDetails(baselist.getBaselistId)" class="black-text">
+                        <div class="card card-block">
+                            <h4 class="card-title">@baselist.getBaselistName</h4>
+                            <p class="card-text">@baselist.getDescription</p>
+                            <p>@baselist.getWordCountString() words</p>
+
+                        </div>
+                    </a>
+                </div>
+                }
+            </div>
+            <a href="@routes.CmsCategoryListController.createCategoryBaselist()">
+                <button type="button" class="mb-1 btn btn-primary mb-3">Add Category Baselist</button>
+            </a>
+
+            <h4 class="h4-responsive">(logical) Category Lists</h4>
+            <p>Logical lists consist of one or more physical lists. Those are actually used on the smartphone.</p>
+            <hr>
+            <div class="row">
+            @for(logicallist <- logicallists) {
+                <div class="col-lg-4">
+                    <a href="@routes.CmsCategoryListController.getLogicalCategoryListDetails(logicallist.getLogicallistId)" class="black-text">
+                        <div class="card card-block">
+                            <h4 class="card-title">@logicallist.getLogicallistName</h4>
+                            <p class="card-text">@logicallist.getDescription</p>
+                            <p>@logicallist.getWordCountString() words</p>
+                        </div>
+                    </a>
+                </div>
+            }
+            </div>
+            <a href="@routes.CmsCategoryListController.createLogicalCategoryList()">
+                <button type="button" class="mb-1 btn btn-primary mb-3">Create Logical Category List</button>
+            </a>
+        </div>
+    </main>
+
+    <script type="text/javascript" src="@routes.Assets.versioned("js/jquery.min.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.versioned("js/tether.min.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.versioned("js/bootstrap.min.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.versioned("js/mdb.min.js")"></script>
+    <script>
+
+
+    </script>
+    </body>
+
+</html>

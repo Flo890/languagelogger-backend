@@ -1,0 +1,25 @@
+version: '2'
+services:
+  researchime-server:
+    build:
+      context: .
+    ports:
+      - 9000:9000
+      - 9001:9001
+    links:
+      - researchime-db
+    environment:
+      - DB_USERNAME=root
+      - DB_PASSWORD=researchime
+      - APPLICATION_SECRET=researchime
+      - DB_URL=jdbc:mysql://researchime-db/researchimedb?characterEncoding=UTF8&connectionCollation=utf8mb4_general_ci&verifyServerCertificate=false&useSSL=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+
+  researchime-db:
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    command: ['mysqld', '--character-set-server=utf8mb4']
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: researchime
+      MYSQL_DATABASE: researchimedb

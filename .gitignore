@@ -1,0 +1,13 @@
+logs
+target
+/.idea
+/.idea_modules
+/.classpath
+/.project
+/.settings
+/RUNNING_PID
+/.DS_Store
+researchdb
+/.researchime-1.0-SNAPSHOT
+
+!target/universal/researchime-1.0-SNAPSHOT.zip

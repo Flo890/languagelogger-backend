@@ -1,0 +1,293 @@
+@import models.config.KeyboardConfigItem
+@(form: Form[CmsStudyController.StudyConfig], keyboardConfigs: List[KeyboardConfigItem], keyboards: List[KeyboardLayout])
+@import models.PageGroupConstants
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="author" content="ResearchIME Project">
+        <title>ResearchIME</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="@routes.Assets.versioned("apple-touch-icon.png")">
+        <link rel="icon" type="image/png" href="@routes.Assets.versioned("favicon-32x32.png")">
+        <link rel="manifest" href="@routes.Assets.versioned("manifest.json")">
+        <link href="@routes.Assets.versioned("css/font-awesome.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/bootstrap.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/mdb.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/cms.css")" rel="stylesheet">
+    </head>
+
+    <body>
+        <header>
+            <nav class="navbar navbar-dark default-color-dark">
+                <a class="hidden-sm-up navbar-brand" style="float: none;" href="@routes.CmsDashboardController.index">
+                    ResearchIME</a>
+                <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#collapseMenu">
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                @partials.header(PageGroupConstants.STUDY)
+            </nav>
+        </header>
+
+        <main>
+            <div class="container">
+                @if(flash.contains("success")) {
+                    <div class="card card-success">
+                        <div class="card-block">
+                            <h4 class="m-0 white-text">@flash.get("success")</h4>
+                        </div>
+                    </div>
+                    <hr>
+                }
+                @if(flash.contains("error")) {
+                    <div class="card card-danger">
+                        <div class="card-block">
+                            <h4 class="m-0 white-text">@flash.get("error")</h4>
+                        </div>
+                    </div>
+                    <hr>
+                }
+
+                <h4 class="h4-responsive">Configuration</h4>
+                <hr>
+
+                @helper.form(routes.CmsStudyController.update) {
+
+                    <div class="card mt-1">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card-block">
+                                    <div class="col-xs-12 mt-1" >
+                                        <div class="md-form">
+                                            <i class="fa fa-pencil prefix"></i>
+                                            <input type="text" id="studyName" class="form-control" name="studyName" value="@form.data.get("studyName")">
+                                            <label for="studyName">Study name</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 row">
+                                        <div class="col-lg-2 col-md-3 col-xs-5">
+                                            <div class="md-form">
+                                                <i class="fa fa-calendar prefix"></i>
+                                                <input type="number" id="studyDays" class="form-control" name="studyDays" min="0" value="@form.data.get("studyDays")">
+                                                <label for="studyDays">Duration</label>
+                                            </div>
+                                        </div>
+                                        <h4 class="col-lg-2 col-md-9 col-xs-7" style="margin-top: 10px;">days</h4>
+                                    </div>
+                                    <div class="col-xs-12 row">
+                                        <div class="col-lg-2 col-md-3 col-xs-5">
+                                            <div class="md-form">
+                                                <i class="fa fa-clock-o prefix"></i>
+                                                <input type="number" id="studyHours" class="form-control" name="studyHours" min="0" value="@form.data.get("studyHours")">
+                                                <label for="studyHours">Duration</label>
+                                            </div>
+                                        </div>
+                                        <h4 class="col-lg-2 col-md-9 col-xs-7" style="margin-top: 10px;">hours</h4>
+                                    </div>
+                                    <div class="col-xs-12 row">
+                                        <div class="col-lg-2 col-md-3 col-xs-5">
+                                            <div class="md-form">
+                                                <i class="fa fa-clock-o prefix"></i>
+                                                <input type="number" id="studyMinutes" class="form-control" name="studyMinutes" min="0" value="@form.data.get("studyMinutes")">
+                                                <label for="studyMinutes">Duration</label>
+                                            </div>
+                                        </div>
+                                        <h4 class="col-lg-2 col-md-9 col-xs-7" style="margin-top: 10px;">minutes</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="h4-responsive">Metadata to show in the app</h4>
+                    <hr>
+                    <div class="card">
+                        <div class="row">
+                            <div class="card-block">
+                                <div class="col-xs-12 col-md-3">
+                                    <input id="showNameCheck" type="checkbox" name="showName" @if(form.data.get("showName")) {checked}>
+                                    <label class="h6 mr-1 noselect" for="showNameCheck">Study name</label>
+                                </div>
+                                <div class="col-xs-12 col-md-3">
+                                    <input id="showEndDateCheck" type="checkbox" name="showEndDate" @if(form.data.get("showEndDate")) {checked}>
+                                    <label class="h6 mr-1 noselect" for="showEndDateCheck">Duration</label>
+                                </div>
+                                <div class="col-xs-12 col-md-3">
+                                    <input id="showStatisticsCheck" type="checkbox" name="showStatistics" @if(form.data.get("showStatistics")) {checked}>
+                                    <label class="h6 mr-1 noselect" for="showStatisticsCheck">Statistics</label>
+                                </div>
+                                <div class="col-xs-12 col-md-3">
+                                    <input id="showKeyboardNameCheck" type="checkbox" name="showKeyboardName" @if(form.data.get("showKeyboardName")) {checked}>
+                                    <label class="h6 mr-1 noselect" for="showKeyboardNameCheck">Keyboard name</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="h4-responsive">Welcome message</h4>
+                    <hr>
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card-block">
+                                    <div class="md-form">
+                                        <input type="text" id="formInfoTitle" class="form-control" name="infoTitle" value="@form.data.get("infoTitle")">
+                                        <label for="formInfoTitle">Titel</label>
+                                    </div>
+                                    <div class="md-form">
+                                        <textarea type="text" id="formInfoMsg" class="md-textarea" name="infoMessage" value="@form.data.get("infoMessage")">@form.data.get("infoMessage")</textarea>
+                                        <label for="formInfoMsg">Message</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <button type="submit" class="row btn btn-success pull-right">Save</button>
+                    </div>
+                }
+
+                <h4 class="h4-responsive">Keyboards</h4>
+                <hr>
+                <div class="row">
+                @for((keyboard, index) <- keyboardConfigs.zipWithIndex) {
+                    <div class="col-lg-4">
+                        <div class="card card-block">
+                            <p class="pull-right">
+                                <a onclick='onDeleteLayout(@keyboard.getId, @index);' class="ml-1 pointer" aria-hidden="true" data-toggle="modal" data-target="#keyboardModalDelete">&times; </a>
+                            </p>
+                            <h4 class="card-title">@keyboard.linkLayoutName</h4>
+                            <p class="card-text">@keyboard.calcDuration</p>
+                        </div>
+                    </div>
+                }
+                </div>
+                <button type="button" class="btn btn-primary mb-6" data-toggle="modal" data-target="#keyboardModal">
+                    Add keyboard</button>
+            </div>
+
+
+                <!-- Modal -->
+
+            @if(keyboards.size() > 0) {
+                <div class="modal fade" id="keyboardModal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h4 class="modal-title" id="keyboardModalLabel">Add keyboard association</h4>
+                            </div>
+                            <div class="modal-body">
+
+                            @helper.form(routes.CmsStudyController.addKeyboard) {
+                                <fieldset>
+                                    <div class="row">
+                                        <h5 class="col-md-4" style="margin-top: 25px;">Keyboard layout</h5>
+                                        <div class="col-md-8 mt-1">
+                                            <div class="form-group">
+                                                <select class="selectpicker form-control" onchange="onKeyboardIdChange(this);">
+                                                @for(keyboard <- keyboards) {
+                                                    <option value="@keyboard.getLayoutId">@keyboard.getName</option>
+                                                }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1 ml-0">
+                                        <div class="col-xs-12 row">
+                                            <div class="col-lg-3 col-md-3 col-xs-5">
+                                                <div class="md-form">
+                                                    <i class="fa fa-calendar prefix"></i>
+                                                    <input type="number" id="addKeyboardDays" class="form-control" name="addKeyboardDays" min="0" value="">
+                                                    <label for="addKeyboardDays">Duration</label>
+                                                </div>
+                                            </div>
+                                            <h4 class="col-lg-3 col-md-9 col-xs-7" style="margin-top: 10px;">days</h4>
+                                        </div>
+                                        <div class="col-xs-12 row">
+                                            <div class="col-lg-3 col-md-3 col-xs-5">
+                                                <div class="md-form">
+                                                    <i class="fa fa-clock-o prefix"></i>
+                                                    <input type="number" id="addKeyboardHours" class="form-control" name="addKeyboardHours" min="0" value="">
+                                                    <label for="addKeyboardHours">Duration</label>
+                                                </div>
+                                            </div>
+                                            <h4 class="col-lg-3 col-md-9 col-xs-7" style="margin-top: 10px;">hours</h4>
+                                        </div>
+                                        <div class="col-xs-12 row">
+                                            <div class="col-lg-3 col-md-3 col-xs-5">
+                                                <div class="md-form">
+                                                    <i class="fa fa-clock-o prefix"></i>
+                                                    <input type="number" id="addKeyboardMinutes" class="form-control" name="addKeyboardMinutes" min="0" value="">
+                                                    <label for="addKeyboardMinutes">Duration</label>
+                                                </div>
+                                            </div>
+                                            <h4 class="col-lg-3 col-md-9 col-xs-7" style="margin-top: 10px;">minutes</h4>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input id="keyboard-layout-res" name="addKeyboardId" type="hidden" value="@keyboards.get(0).getLayoutId">
+                                        <button id="save-keyboard" type="submit" class="btn btn-success">
+                                            Add</button>
+                                    </div>
+                                </fieldset>
+                            }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="modal fade" id="keyboardModalDelete" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">Delete keyboard association</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h3 class="mb-1">Do you really want to delete this keyboard association?</h3>
+                            @helper.form(routes.CmsStudyController.deleteKeyboard) {
+                                <fieldset>
+                                    <input id="keyboard-delete-res" type="hidden" name="deleteId">
+                                    <input id="keyboard-delete-pos" type="hidden" name="deletePos">
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </div>
+                                </fieldset>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </main>
+
+
+        <script type="text/javascript" src="@routes.Assets.versioned("js/jquery.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/tether.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/bootstrap.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/mdb.min.js")"></script>
+        <script>
+
+                function onKeyboardIdChange(selectBox) {
+                    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+                    $('#keyboard-layout-res').val(selectedValue);
+                }
+
+                function onDeleteLayout(configId, pos) {
+                    $('#keyboard-delete-res').val(configId);
+                    $('#keyboard-delete-pos').val(pos);
+                }
+        </script>
+    </body>
+
+</html>

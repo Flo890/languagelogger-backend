@@ -1,0 +1,181 @@
+@import utils.UserSortType
+@import play.api.libs.json.Json
+@(messages: List[models.demoview.DemoMessage], totalEventCount: Integer, userCount: Integer, wordFrequencies: List[WordFrequency])
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="author" content="ResearchIME Project">
+        <title>ResearchIME</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="@routes.Assets.versioned("apple-touch-icon.png")">
+        <link rel="icon" type="image/png" href="@routes.Assets.versioned("favicon-32x32.png")">
+        <link rel="manifest" href="@routes.Assets.versioned("manifest.json")">
+        <link href="@routes.Assets.versioned("css/font-awesome.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/bootstrap.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/mdb.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/cms.css")" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <header>
+            <nav class="navbar navbar-dark default-color-dark">
+                <a class="hidden-sm-up navbar-brand" style="float: none;" href="@routes.CmsDashboardController.index">ResearchIME</a>
+                <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#collapseMenu">
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                @partials.header(null)
+            </nav>
+        </header>
+
+        <main>
+            <div class="container">
+                <div class="row">
+
+                    <div class="block">
+                        <a href="#events" class="black-text">
+                            <div class="card-block col-lg-4 col-md-6">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-database fa-2x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <h4>@totalEventCount Events</h4>
+                                    <p>...wurden über die gesamte Studiendauer hinweg von Ihnen erfasst.</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="block">
+                        <a href="@routes.CmsUserController.getUsers" class="black-text">
+                            <div class="card-block col-lg-4 col-md-6">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-comments fa-2x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <h4>@messages.size() Texteingaben</h4>
+                                    <p>...wurden während der Studiendauer erfasst</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+
+                </div>
+
+                <p>Im folgenden sehen Sie ein Auszug der Logdaten, die von Ihnen während der Studiendauer gesammelt wurden. Die Logdaten-Arten sind in die 3 Kategorien <i>Wort-Kategorisierung</i>, <i>Wort-Häufigkeiten</i> und <i>Emojis</i> unterteilt.</p>
+
+                <h4 class="mt-2 h3-responsive">Wort-Kategorisierung</h4>
+                <p>Hier sehen Sie, was durch die Wort-Kategorisierung von Ihnen gespeichert wurde.<br/>
+                Eine Zeile entstammt jeweils einer Texteingabe (Chat-Nachricht, Such-Eingabe, eingegebene URL, ...). Links in der Spalte <i>Statistik</i> sind allgemeine Informationen über die Eingabe zu sehen.
+                Rechts in der Spalte <i>Events</i> sind die erfassten Wortkategorien zu sehen. Jede Box steht hier für ein "Wort-Event" (Wort hinzufügen, Wort bearbeiten, Wort entfernen), und enthält lediglich die Kategorie des Wortes. <i>unknown</i> bedeutet dass ein Wort zu keiner bekannten Kategorie gehörte.</p>
+                <hr>
+                <a name="events"></a>
+
+                <div class="card table-responsive">
+                    <table class="table table-bordered table-hover" style="width:3000px;max-width:3000px">
+                        <thead>
+                            <tr>
+                                <th>Statistik</th>
+                                <th style="text-align: left;padding-left:100px">Events</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @for(message <- messages) {
+                            <tr>
+                                <td><ul style="max-width:400px">
+                                    <li>Zeit: <b>@message.getTimeAsString()</b></li>
+                                    <li>App: <b>@message.getMessageStatistics().getInputTargetApp()</b></li>
+                                    <li>Eingabefeld-Hint: <b>@message.getMessageStatistics().getFieldHintText()</b></li>
+                                    <li>Anzahl Zeichen hinzugefügt: <b>@message.getMessageStatistics().getCharacterCountAdded()</b></li>
+                                    <li>Anzahl Zeichen bearbeitet: <b>@message.getMessageStatistics().getCharacterCountAltered()</b></li>
+                                    <li>Anzahl Zeichen abgesendet: <b>@message.getMessageStatistics().getCharacterCountSubmitted()</b></li>
+                                </ul></td>
+                                <td>
+                                    <div class="row d-flex align-content-start flex-wrap" style="width: 3000px">
+                                    @for(event <- message.getDemoAbstractedActionEvents()) {
+                                        <div class="card card-body col-sm-2 m-1 p-1" style="max-width: 10%">
+                                            <h4 class="card-title" style="white-space: normal">@event.getContent()</h4>
+                                            <p class="card-text">@event.getType()</p>
+                                        </div>
+                                    }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="mt-2 h3-responsive">Word-Häufigkeiten</h4>
+                <p>Hier sehen Sie die Wort-Häufigkeitstabelle, die von Ihnen geloggt wurde. Es wurden nur Wörter gezählt die in einem deutschen Wörterbuch vorkommen, wodurch Passwörter, Namen, Handynummern, ... nicht erfasst wurden.</p>
+                <hr>
+                <a name="events"></a>
+
+                <div class="card table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Wort</th>
+                                <th>Häufigkeit über die gesamte Studiendauer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @for(wordFrequency <- wordFrequencies) {
+                            <tr>
+                                <td>@wordFrequency.getWord()</td>
+                                <td>@wordFrequency.getCount()</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <h4 class="mt-2 h3-responsive">Emojis</h4>
+                <p>Hier sehen Sie alle Emojis, die während der Studiendauer erfasst wurden. Ähnlich wie bei der Wort-Kategorisierung wurden Emojis als Events erfasst, d.h. das Hinzufügen, Bearbeiten oder Entfernen eines Emojis.</p>
+                <hr>
+                <a name="events"></a>
+
+                <div class="card table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Zeit</th>
+                                <th>Emoji Event</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @for(message <- messages) {
+                            <tr>
+                                <td><ul>
+                                    <li>Zeit: <b>@message.getTimeAsString()</b></li>
+                                </ul></td>
+                                <td>
+                                    <div class="row d-flex align-content-start flex-wrap">
+                                    @for(event <- message.getDemoRegexMatcherEvents()) {
+                                        <div class="card card-body col-sm-2 m-1 p-1">
+                                            <h4 class="card-title" style="white-space: normal">@event.getContent()</h4>
+                                            <p class="card-text">@event.getType()</p>
+                                        </div>
+                                    }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+
+        <script type="text/javascript" src="@routes.Assets.versioned("js/jquery.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/tether.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/bootstrap.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/mdb.min.js")"></script>
+    </body>
+
+</html>

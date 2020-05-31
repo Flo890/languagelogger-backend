@@ -1,0 +1,47 @@
+main {
+    margin-top: 3rem;
+}
+main .card {
+    margin-bottom: 2rem;
+}
+
+.btn-success{
+    color: #689F38;
+    background-color: #689F38;
+}
+.btn-success:focus, .btn-success:hover {
+    color: white !important;
+    background-color: #689F38 !important;
+}
+
+textarea {
+    overflow-y: scroll !important;
+    height: 100px !important;
+    color: #55595c !important;
+}
+
+td, th {
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.codeTextArea{
+    font-family: monospace;
+    height: 400px !important;
+}
+
+.centered{
+    float: none;
+    margin: 0 auto;
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Chrome/Safari/Opera */
+    -khtml-user-select: none; /* Konqueror */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  not supported by any browser */
+}

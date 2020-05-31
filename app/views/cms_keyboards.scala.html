@@ -1,0 +1,76 @@
+@(keyboardLayouts: List[models.KeyboardLayout])
+@import models.PageGroupConstants
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="author" content="ResearchIME Project">
+        <title>ResearchIME</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="@routes.Assets.versioned("apple-touch-icon.png")">
+        <link rel="icon" type="image/png" href="@routes.Assets.versioned("favicon-32x32.png")">
+        <link rel="manifest" href="@routes.Assets.versioned("manifest.json")">
+        <link href="@routes.Assets.versioned("css/font-awesome.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/bootstrap.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/mdb.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/cms.css")" rel="stylesheet">
+    </head>
+
+    <body>
+        <header>
+            <nav class="navbar navbar-dark default-color-dark">
+                <a class="hidden-sm-up navbar-brand" style="float: none;" href="@routes.CmsDashboardController.index">
+                    ResearchIME</a>
+                <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#collapseMenu">
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                @partials.header(PageGroupConstants.KEYBOARDS)
+            </nav>
+        </header>
+
+        <main>
+            <div class="container">
+                @if(flash.contains("success")) {
+                    <div class="card card-success">
+                        <div class="card-block">
+                            <h4 class="m-0 white-text">@flash.get("success")</h4>
+                        </div>
+                    </div>
+                    <hr>
+                }
+                @if(flash.contains("error")) {
+                    <div class="card card-danger">
+                        <div class="card-block">
+                            <h4 class="m-0 white-text">@flash.get("error")</h4>
+                        </div>
+                    </div>
+                    <hr>
+                }
+                <h4 class="h3-responsive">Keyboards</h4>
+                <hr>
+                <div class="row">
+                @for(layout <- keyboardLayouts) {
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <a href="@routes.CmsKeyboardController.getKeyboardDetails(layout.getLayoutId)" class="black-text">
+                            <div class="card hoverable card-block">
+                                <h4 class="card-title">@layout.getName</h4>
+                            </div>
+                        </a>
+                    </div>
+                }
+                </div>
+                <a href="@routes.CmsKeyboardController.createKeyboard()">
+                    <button type="button" class="mb-1 btn btn-primary mb-3">Add Keyboard</button>
+                </a>
+            </div>
+        </main>
+
+        <script type="text/javascript" src="@routes.Assets.versioned("js/jquery.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/tether.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/bootstrap.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/mdb.min.js")"></script>
+    </body>
+
+</html>

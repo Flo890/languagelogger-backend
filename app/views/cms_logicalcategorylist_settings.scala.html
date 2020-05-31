@@ -1,0 +1,177 @@
+@import controllers.CmsCategoryListController.LogicalCategoryListAddConfig
+@import models.wordlists.CategoryBaseList
+@import models.wordlists.LogicalCategoryList
+@import models.PageGroupConstants
+@(form: Form[LogicalCategoryListAddConfig], logicallist: LogicalCategoryList, availableBaselists: List[CategoryBaseList], isNew: Boolean)
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="author" content="ResearchIME Project">
+        <title>ResearchIME</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="@routes.Assets.versioned("apple-touch-icon.png")">
+        <link rel="icon" type="image/png" href="@routes.Assets.versioned("favicon-32x32.png")">
+        <link rel="manifest" href="@routes.Assets.versioned("manifest.json")">
+        <link href="@routes.Assets.versioned("css/font-awesome.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/bootstrap.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/mdb.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/cms.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/google-material-icons.css")" rel="stylesheet">
+    </head>
+
+    <body>
+        <header>
+            <nav class="navbar navbar-dark default-color-dark">
+                <a class="hidden-sm-up navbar-brand" style="float: none;" href="@routes.CmsDashboardController.index">
+                    ResearchIME</a>
+                <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#collapseMenu">
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                @partials.header(PageGroupConstants.CATEGORYLISTS)
+            </nav>
+        </header>
+
+        <main>
+            <div class="container">
+                @if(flash.contains("success")) {
+                    <div class="card card-success">
+                        <div class="card-block">
+                            <h4 class="m-0 white-text">@flash.get("success")</h4>
+                        </div>
+                    </div>
+                    <hr>
+                }
+                @if(flash.contains("error")) {
+                    <div class="card card-danger">
+                        <div class="card-block">
+                            <h4 class="m-0 white-text">@flash.get("error")</h4>
+                        </div>
+                    </div>
+                    <hr>
+                }
+
+                @helper.form(routes.CmsCategoryListController.updateLogicalCategoryList()) {
+                    <h4 class="h4-responsive">Logical Category List</h4>
+                    <hr>
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card-block">
+                                    <div class="md-form">
+                                        <input type="text" id="formInfoTitle" class="form-control" name="logicallistName" value="@form.data.get("logicallistName")">
+                                        <label for="formInfoTitle">Name</label>
+                                    </div>
+                                    <div class="md-form">
+                                        <textarea type="text" id="formInfoMsg" class="md-textarea" name="description" value="@form.data.get("description")">@form.data.get("description")</textarea>
+                                        <label for="formInfoMsg">Description (optional)</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="h4-responsive">logical list configuration</h4>
+                    <hr>
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card-block">
+                                    @if(! isNew) {
+                                        <div>
+                                            @for(warning <- logicallist.getConfigWarnings()){
+                                                <div>
+                                                    <p class="text-warning"><i class="material-icons">warning</i>@warning</p>
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                    <div class="md-form">
+                                        <fieldset class="form-group text-xs-right">
+                                            <input id="preapplyLemmaExtractionCheckBox" type="checkbox" name="preapplyLemmaExtraction" @if(form.data.get("preapplyLemmaExtraction")){checked}>
+                                            <label class="h6 mr-1 noselect" for="preapplyLemmaExtractionCheckBox">Enable Lemma-Extraction</label>
+                                        </fieldset>
+                                        <p>select the physical lists which should be included in this logical list</p>
+                                        <div class="row">
+                                            @if(! isNew) {
+                                                @for(categoryBaseList <- logicallist.getIncludesCategoryBaseLists()) {
+                                                    <div class="card card-body col-sm-3 m-1 p-1">
+                                                        <a class="dropdown-item" href="@routes.CmsCategoryListController.removeBaselistFromLogicalCategoryList()?logicallistId=@form.data.get("logicallistId")&baselistId=@categoryBaseList.getBaselistId()">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Remove">
+                                                                <span aria-hidden="true"><i class="material-icons">delete</i></span>
+                                                            </button>
+                                                        </a>
+                                                        <h4 class="card-title"> @categoryBaseList.getBaselistName()</h4>
+                                                    </div>
+                                                }
+                                            } else {
+                                                <div>
+                                                    <p class="text-warning"><i class="material-icons">warning</i>Please save this logical list configuration before adding base lists</p>
+                                                </div>
+                                            }
+                                        </div>
+                                        @if(!isNew) {
+                                            <div>
+                                                <button class="btn default-color-dark dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Add another base list</button>
+                                                <div class="dropdown-menu">
+                                                @for(baselist <- availableBaselists) {
+                                                    @if(isNew || !logicallist.getIncludesCategoryBaseLists().contains(baselist)) {
+                                                        <a class="dropdown-item" href="@routes.CmsCategoryListController.addBaselistToLogicalCategoryList()?logicallistId=@form.data.get("logicallistId")&baselistId=@baselist.getBaselistId()">@baselist.getBaselistName()</a>
+                                                    }
+                                                }
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-group mb-3 pull-right">
+                        @if(! isNew){
+                            <button type="button" data-toggle="modal" data-target="#modalDelete" class="btn btn-danger">
+                                Löschen</button>
+                        }
+                        <button type="submit" class="ml-1 btn btn-success">Save</button>
+                    </div>
+                    <input type="hidden" id="formId" class="form-control" name="logicallistId" value="@form.data.get("logicallistId")">
+                    }
+            </div>
+
+            <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">Delete logical category lit</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h3 class="mb-1">Do you really want to delete this logical category list?</h3>
+                            @helper.form(routes.CmsCategoryListController.deleteLogicalCategoryList) {
+                                <fieldset>
+                                    <input type="hidden" name="logicallistId" value="@form.data.get("logicallistId")">
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </div>
+                                </fieldset>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <script type="text/javascript" src="@routes.Assets.versioned("js/jquery.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/tether.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/bootstrap.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/mdb.min.js")"></script>
+    </body>
+
+</html>

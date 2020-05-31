@@ -1,0 +1,220 @@
+@(totalEventCount: Integer, events: List[models.DashboardEvent], users: List[models.DashboardUser])
+
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Dashboard für die ResearchIME-Studie">
+        <meta name="author" content="ResearchIME Project">
+        <link rel="apple-touch-icon" sizes="180x180" href="@routes.Assets.versioned("apple-touch-icon.png")">
+        <link rel="icon" type="image/png" href="@routes.Assets.versioned("favicon-32x32.png")">
+        <link rel="manifest" href="@routes.Assets.versioned("manifest.json")">
+
+        <title>Deprecated - ResearchIME Dashboard</title>
+
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <div id="wrapper">
+
+            <nav class="navbar navbar-default navbar-static-top">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="dashboard">Deprecated ResearchIME Dashboard (v1)</a>
+                </div>
+
+                <a href="@routes.DashboardLoginController.logout()">
+                    <button type="button" class="btn btn-default btn-sm pull-right login-button">
+                        <span class="glyphicon glyphicon-log-out"></span> Abmelden
+                    </button>
+                </a>
+
+            </nav>
+
+            <div id="content-wrapper">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">Dashboard</h1>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-3 col-md-6">
+
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-database fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">@totalEventCount</div>
+                                        <div>Keyboard-Events</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#events">
+                                <div class="panel-footer">
+                                    <span class="pull-left">Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+
+                        <div class="panel panel-green">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-user fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">@users.size()</div>
+                                        <div>Benutzer</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#users">
+                                <div class="panel-footer">
+                                    <span class="pull-left">Details</span>
+                                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <a name="users"></a>
+                <h3>Aktuelle Benutzerliste</h3>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Events</th>
+                                            <th>Letzte Aktivität</th>
+                                            <th>Letzter Private-Mode</th>
+                                            <th>User</th>
+                                            <th>Geschlecht</th>
+                                            <th>Alter</th>
+                                            <th>Registrierung</th>
+                                            <th>Gerätehersteller</th>
+                                            <th>Gerätetyp</th>
+                                            <th>Auflösung</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    @for(user <- users) {
+                                        <tr>
+                                            <td>@user.eventCount</td>
+                                            @if(user.lastEvent) {
+                                                <td>@user.lastEvent</td>
+                                            } else {
+                                                <td>-</td>
+                                            }
+                                            @if(user.lastPrivateMode) {
+                                                <td>@user.lastPrivateMode</td>
+                                            } else {
+                                                <td>-</td>
+                                            }
+                                            <td>@user.id</td>
+                                            <td>
+                                            @if(user.isMale) {
+                                                <i class="fa fa-mars"></i>
+                                            } else {
+                                                <i class="fa fa-venus"></i>
+                                            }
+                                            </td>
+                                            <td>@user.age</td>
+                                            <td>@user.registrationDate</td>
+                                            <td>@user.deviceManufacturer</td>
+                                            <td>@user.deviceModel</td>
+                                            <td>@user.deviceResolution</td>
+                                        </tr>
+                                    }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <a name="events"></a>
+                <h3>Neueste Keyboard-Events</h3>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Zeit</th>
+                                            <th>User</th>
+                                            <th>Input-Event</th>
+                                            <th>Input-Mode</th>
+                                            <th>Hand-Posture</th>
+                                            <th>Private</th>
+                                            <th>Anonym</th>
+                                            <th>Länge</th>
+                                            <th>Key-Code</th>
+                                            <th>x</th>
+                                            <th>y</th>
+                                            <th>Package-Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                <tbody>
+                                    @for(event <- events) {
+                                        <tr>
+                                            <td>@event.time</td>
+                                            <td>@event.userId</td>
+                                            <td>@event.inputEvent</td>
+                                            <td>@event.inputMode</td>
+                                            <td>@event.handPosture</td>
+                                            <td>
+                                            @if(event.isPrivateMode) {
+                                                <i class="fa fa-lock"></i>
+                                            } else {
+                                                <i class="fa fa-unlock"></i>
+                                            }
+                                            </td>
+                                            @if(event.isAnonymous) {
+                                                <td>Ja</td>
+                                            } else {
+                                                <td>Nein</td>
+                                            }
+                                            <td>@event.contentLength</td>
+                                            @if(event.isAnonymous) {
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            } else {
+                                                <td>@event.code</td>
+                                                <td>@event.x</td>
+                                                <td>@event.y</td>
+                                            }
+                                            <td>@event.packageName</td>
+                                        </tr>
+                                    }
+                                </tbody>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </body>
+</html>

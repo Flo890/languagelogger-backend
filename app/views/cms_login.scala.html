@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="author" content="ResearchIME Project">
+        <title>ResearchIME</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="@routes.Assets.versioned("apple-touch-icon.png")">
+        <link rel="icon" type="image/png" href="@routes.Assets.versioned("favicon-32x32.png")">
+        <link rel="manifest" href="@routes.Assets.versioned("manifest.json")">
+        <link href="@routes.Assets.versioned("css/font-awesome.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/bootstrap.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/mdb.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/cms.css")" rel="stylesheet">
+    </head>
+
+    <body class="default-color-dark">
+        <main>
+            <div class="container">
+                <div class="row">
+                @helper.form(routes.CmsLoginController.authenticate()) {
+                    <div class="card col-md-5 centered z-depth-3">
+                        <div class="card-block">
+                            <h3 class="centered text-lg-center" style="margin-top: 10px;">Sign in</h3>
+                            <div class="md-form" style="margin-top: 30px;">
+                                <i class="fa fa-user prefix"></i>
+                                <input type="text" id="form2" class="form-control" name="userName">
+                                <label for="form2">Username</label>
+                            </div>
+
+                            <div class="md-form">
+                                <i class="fa fa-lock prefix"></i>
+                                <input type="password" id="form4" class="form-control" name="pwd">
+                                <label for="form4">Password</label>
+                            </div>
+
+                            @if(flash.contains("error")) {
+                                <div class="mt-2 card card-danger">
+                                    <div class="card-block">
+                                        <p class="m-0 white-text">@flash.get("error")</p>
+                                    </div>
+                                </div>
+                            }
+                            @if(flash.contains("success")) {
+                                <div class="mt-2 card card-success">
+                                    <div class="card-block">
+                                        <p class="m-0 white-text">@flash.get("success")</p>
+                                    </div>
+                                </div>
+                            }
+                            <div class="text-xs-center">
+                                <button type="submit" class="btn btn-primary">Sign in</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+                </div>
+            </div>
+        </main>
+
+        <script type="text/javascript" src="@routes.Assets.versioned("js/jquery.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/tether.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/bootstrap.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/mdb.min.js")"></script>
+    </body>
+
+</html>

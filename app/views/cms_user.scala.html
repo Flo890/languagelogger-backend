@@ -1,0 +1,412 @@
+@import models.PageGroupConstants
+@(user: models.User, activeKeyboardConfig: models.KeyboardUserConfig, keyboardConfigs: List[models.KeyboardUserConfig], keyboardLayouts: List[models.KeyboardLayout], messages: List[models.Message])
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="author" content="ResearchIME Project">
+        <title>ResearchIME</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="@routes.Assets.versioned("apple-touch-icon.png")">
+        <link rel="icon" type="image/png" href="@routes.Assets.versioned("favicon-32x32.png")">
+        <link rel="manifest" href="@routes.Assets.versioned("manifest.json")">
+        <link href="@routes.Assets.versioned("css/font-awesome.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/bootstrap.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/mdb.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/bootstrap-material-datetimepicker.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/google-material-icons.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/cms.css")" rel="stylesheet">
+    </head>
+
+    <body>
+        <header>
+            <nav class="navbar navbar-dark default-color-dark">
+                <a class="hidden-sm-up navbar-brand" style="float: none;" href="@routes.CmsDashboardController.index">
+                    ResearchIME</a>
+                <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#collapseMenu">
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                @partials.header(PageGroupConstants.USER)
+            </nav>
+        </header>
+
+        <main>
+            <div class="container">
+                @if(flash.contains("success")) {
+                    <div class="card card-success">
+                        <div class="card-block">
+                            <h4 class="m-0 white-text">@flash.get("success")</h4>
+                        </div>
+                    </div>
+                    <hr>
+                }
+                @if(flash.contains("error")) {
+                    <div class="card card-danger">
+                        <div class="card-block">
+                            <h4 class="m-0 white-text">@flash.get("error")</h4>
+                        </div>
+                    </div>
+                    <hr>
+                }
+                @if(flash.contains("warning")) {
+                    <div class="card card-warning">
+                        <div class="card-block">
+                            <h4 class="m-0 white-text">@flash.get("warning")</h4>
+                        </div>
+                    </div>
+                    <hr>
+                }
+                <div class="card">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card-block">
+                                <h4 class="card-title">Nutzer-ID</h4>
+                                <p class="card-text">@user.uuid</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card-block">
+                                <h4 class="card-title">Keyboard-Events</h4>
+                                <p class="card-text">@user.getEventsCount</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card-block">
+                                <h4 class="card-title">Geschlecht & Alter</h4>
+                                <p class="card-text">
+                                    @if(user.isMale) {
+                                        <i class="fa fa-male fa-2x" aria-hidden="true"></i>
+                                    } else {
+                                        @if(user.isFemale) {
+                                            <i class="fa fa-female fa-2x" aria-hidden="true"></i>
+                                        }
+                                    }
+                                    <span class="ml-1">@user.age Jahre</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card-block">
+                                <h4 class="card-title">Letzte Aktivität</h4>
+                                <p class="card-text">@user.getLastActivityDateTime</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card-block">
+                                <h4 class="card-title">Registrierung</h4>
+                                <p class="card-text">@user.getStudyStartDateTime</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card-block">
+                                <h4 class="card-title">Ende der Studie</h4>
+                                <p class="card-text">@user.getStudyEndDateTime</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card-block">
+                                <h4 class="card-title">Gerät</h4>
+                                <p class="card-text">@user.deviceManufacturer, @user.deviceModel</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card-block">
+                                <h4 class="card-title">Betriebssystem</h4>
+                                <p class="card-text">@user.osVersion</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card-block">
+                                <h4 class="card-title">Auflösung</h4>
+                                <p class="card-text">@user.getDensity</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="h4-responsive">Keyboards</h4>
+                <hr>
+                <div class="row">
+                @for(keyboard <- keyboardConfigs) {
+                    <div class="col-lg-4 col-md-6 col-sm-6">
+                        <div class="card card-block">
+                            <p class="pull-right">
+                                @if(keyboard == activeKeyboardConfig) {
+                                    <span class="tag tag-primary">Aktiv</span>
+                                }
+                            <a onclick='onDeleteLayout(@keyboard.getId);' class="ml-1 pointer" aria-hidden="true" data-toggle="modal" data-target="#keyboardModalDelete">&times;</a>
+                            </p>
+                            <h4 class="card-title">@keyboard.getLayoutName</h4>
+                            <p class="card-text">@keyboard.getStartDateText</p>
+                        </div>
+                    </div>
+                }
+                </div>
+
+                @if(keyboardLayouts.size > 0) {
+                    <button type="button" class="mb-1 btn btn-primary" data-toggle="modal" data-target="#keyboardModal">
+                        Hinzufügen</button>
+                }
+
+                <hr>
+                <button data-toggle="modal" data-target="#messageModalAdd" type="button" class="btn btn-primary pull-right">
+                    Neue Nachricht</button>
+                <h4 class=" h4-responsive">Nachrichten</h4>
+                <hr>
+                @for(message <- messages) {
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <div class="col-md-10">
+                                <p class="">@message.getTimestampText
+                                    @if(message.isUserMessage) {
+                                        <span class="pull-right tag tag-primary">Nutzer-Nachricht</span>
+                                    }
+                                </p>
+                                <div class="card card-block">
+                                    @if(message.hasTitle) {
+                                        <h4 class="card-title">@message.title</h4>
+                                    }
+                                <p class="card-text">@message.message</p>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                @if(message.isUserMessage) {
+                                    <fieldset class="form-group">
+                                        @if(message.isNewMessage) {
+                                            <input type="checkbox" onchange="sendUpdateMessageStatus(@message.id, this.checked);" id="checkbox_msg_new_id@message.id">
+                                        } else {
+                                            <input type="checkbox" onchange="sendUpdateMessageStatus(@message.id, this.checked);" id="checkbox_msg_new_id@message.id" checked>
+                                        }
+                                        <label for="checkbox_msg_new_id@message.id">Als gelesen markieren</label>
+                                    </fieldset>
+                                }
+                            <button onclick='onDeleteMessage(@message.id);' class="mt-0 btn btn-danger" data-toggle="modal" data-target="#messageModalDelete">Löschen</button>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    }
+
+                <button class="mt-0 btn btn-danger pull-right mb-3" data-toggle="modal" data-target="#userModalDelete">Nutzer löschen</button>
+            </div>
+
+                <!-- Modal -->
+            @if(keyboardLayouts.size > 0) {
+                <div class="modal fade" id="keyboardModal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h4 class="modal-title" id="keyboardModalLabel">Keyboard-Verwendung hinzufügen</h4>
+                            </div>
+                            <div class="modal-body">
+
+                            @helper.form(routes.CmsUserController.addKeyboardForUser) {
+                                <fieldset>
+                                    <div class="row">
+                                        <h5 class="col-md-4" style="margin-top: 25px;">Keyboard-Layout</h5>
+                                        <div class="col-md-8 mt-1">
+                                            <div class="form-group">
+                                                <select class="selectpicker form-control" onchange="onKeyboardIdChange(this);">
+                                                @for(layout <- keyboardLayouts) {
+                                                    <option value="@layout.getLayoutId">@layout.getName</option>
+                                                }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <h5 class="col-md-4 mt-2">Aktivierungsdatum</h5>
+                                        <div class="col-md-8">
+                                            <input type="text" id="keyboard-date-picker" class="mt-1 form-control floating-label" placeholder="Aktivierungsdatum">
+                                        </div>
+                                    </div>
+                                    <input name="userId" type="hidden" value="@user.uuid">
+                                    <input id="keyboard-date-res" name="date" type="hidden">
+                                    <input id="keyboard-layout-res" name="layoutId" type="hidden" value="@keyboardLayouts.get(0).getLayoutId">
+                                    <div class="modal-footer">
+                                        <button id="save-keyboard" type="button" class="btn btn-success disabled">
+                                            Speichern</button>
+                                    </div>
+                                </fieldset>
+                            }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="modal fade" id="messageModalAdd" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">Nachricht senden</h4>
+                        </div>
+                        <div class="mt-1 modal-body">
+                        @helper.form(routes.CmsUserController.sendMessage) {
+                            <div class="md-form">
+                                <i class="fa fa-comment-o prefix"></i>
+                                <input type="text" id="formMsgTitle" class="form-control" name="title">
+                                <label for="formMsgTitle">Titel</label>
+                            </div>
+                            <div class="md-form">
+                                <i class="fa fa-pencil prefix"></i>
+                                <textarea type="text" id="formMsgText" class="md-textarea" name="text"></textarea>
+                                <label for="formMsgText">Nachricht</label>
+                            </div>
+                            <input type="hidden" name="userId" value="@user.uuid">
+                            <div class="modal-footer">
+                                <button id="formMsgSend" type="button" class="btn btn-success disabled">Senden</button>
+                            </div>
+                        }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal fade" id="keyboardModalDelete" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">Keyboard-Zuordnung löschen</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h3 class="mb-1">Möchten Sie diese Keyboard-Zuordnung wirklich löschen?</h3>
+                            @helper.form(routes.CmsUserController.deleteKeyboardForUser) {
+                                <fieldset>
+                                    <input id="keyboard-delete-res" type="hidden" name="configId">
+                                    <input type="hidden" name="userId" value="@user.uuid">
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-danger">Löschen</button>
+                                    </div>
+                                </fieldset>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="messageModalDelete" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">Nachricht löschen</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h3 class="mb-1">Möchten Sie diese Nachricht wirklich löschen?</h3>
+                            @helper.form(routes.CmsUserController.deleteMessage) {
+                                <fieldset>
+                                    <input id="keyboard-msg-res" type="hidden" name="messageId">
+                                    <input type="hidden" name="userId" value="@user.uuid">
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-danger">Löschen</button>
+                                    </div>
+                                </fieldset>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal fade" id="userModalDelete" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">Benutzer löschen</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h3 class="mb-1">Möchten Sie diesen Benutzer wirklich unwiderruflich löschen?</h3>
+                            @helper.form(routes.CmsUserController.deleteUser) {
+                                <fieldset>
+                                    <input type="hidden" name="userId" value="@user.uuid">
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-danger">Löschen</button>
+                                    </div>
+                                </fieldset>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+
+        <script type="text/javascript" src="@routes.Assets.versioned("js/jquery.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/tether.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/bootstrap.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/moment.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/bootstrap-material-datetimepicker.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/mdb.min.js")"></script>
+        <script>
+                $('#keyboard-date-picker').bootstrapMaterialDatePicker({
+                    format: 'dd, DD.MM.YY, HH:mm U\\hr',
+                    lang: 'de', weekStart: 1,
+                    minDate: new Date(), time: true
+                }).on('change', function (ev, date) {
+                    $('#save-keyboard').removeClass("disabled").prop("type", "submit");
+                    $('#keyboard-date-res').val(date._d.getTime());
+                });
+
+                $('#formMsgTitle').on('input', function () {
+                    onMessageInput();
+                });
+                $('#formMsgText').on('input', function () {
+                    onMessageInput();
+                });
+
+                function onMessageInput() {
+                    var hasText = $('#formMsgTitle').val().length > 0 && $('#formMsgText').val().length > 0;
+                    if (hasText) {
+                        $('#formMsgSend').removeClass("disabled").prop("type", "submit");
+                    } else {
+                        $('#formMsgSend').addClass("disabled").prop("type", "button");;
+                    }
+                }
+
+                function onKeyboardIdChange(selectBox) {
+                    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+                    $('#keyboard-layout-res').val(selectedValue);
+                }
+
+                function onDeleteLayout(configId) {
+                    $('#keyboard-delete-res').val(configId);
+                }
+
+                function onDeleteMessage(configId) {
+                    $('#keyboard-msg-res').val(configId);
+                }
+
+                function sendUpdateMessageStatus(id, isRead) {
+                    var baseUrl = "@routes.MessagingController.changeMessageStatus()";
+                    var url = baseUrl + "?id=" + id + "&isNew=" + !isRead;
+                    $.ajax({
+                        url: url,
+                        type: "POST"
+                    });
+                }
+        </script>
+    </body>
+
+</html>

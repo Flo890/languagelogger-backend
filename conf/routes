@@ -1,0 +1,91 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                    @controllers.AppController.index
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file        @controllers.Assets.versioned(path="/public", file: Asset)
+
+# researchime
+POST    /api/events                   @controllers.EventController.postEvents
+POST    /api/user                     @controllers.UserController.postUser
+POST    /api/keyboard-state           @controllers.KeyboardStateController.postKeyboardState
+GET     /api/config                   @controllers.KeyboardController.getConfig
+
+POST    /api/messaging                @controllers.MessagingController.postMessage
+POST    /api/messaging/status         @controllers.MessagingController.changeMessageStatus
+GET     /api/dashboard/:id            @controllers.MessagingController.getDashboard(id: String)
+GET     /api/layout/:id               @controllers.KeyboardController.getLayout(id: String)
+
+GET     /api/contentabstraction/listconfig  @controllers.ContentAbstractionConfigController.getCategoryAndWordListsConfigs
+GET     /api/contentabstraction/logicalcategorylist/:logicallistId   @controllers.ContentAbstractionConfigController.getLogicalCategoryListFile(logicallistId: String)
+GET     /api/contentabstraction/logicalwordlist/:logicallistId   @controllers.ContentAbstractionConfigController.getLogicalWordListFile(logicallistId: String)
+POST    /api/contentabstraction/abstractedactionevents  @controllers.AbstractedActionEventController.postEvents
+POST    /api/contentabstraction/wordfrequencies  @controllers.WordFrequenciesController.postWordFrequencies
+POST    /api/contentabstraction/messagestatistics  @controllers.MessageStatisticsController.postMessageStatistics
+
+# cms
+GET     /cms/login                    @controllers.CmsLoginController.login
+GET     /cms/loginparticipant         @controllers.CmsLoginParticipantController.login
+GET     /cms/logout                   @controllers.CmsLoginController.logout
+POST    /cms/authenticate             @controllers.CmsLoginController.authenticate
+POST    /cms/authenticateparticipant  @controllers.CmsLoginParticipantController.authenticate
+GET     /cms                          @controllers.CmsDashboardController.index
+GET     /cms/users                    @controllers.CmsUserController.getUsers()
+GET     /cms/user/:id                 @controllers.CmsUserController.index(id:String)
+POST    /cms/user-delete              @controllers.CmsUserController.deleteUser
+POST    /cms/user-keyboard/add        @controllers.CmsUserController.addKeyboardForUser
+POST    /cms/user-keyboard/delete     @controllers.CmsUserController.deleteKeyboardForUser
+POST    /cms/user-message/add         @controllers.CmsUserController.sendMessage
+POST    /cms/user-message/delete      @controllers.CmsUserController.deleteMessage
+GET     /cms/keyboards                @controllers.CmsKeyboardController.index
+GET     /cms/keyboards/:id            @controllers.CmsKeyboardController.getKeyboardDetails(id: String)
+POST    /cms/keyboard-delete          @controllers.CmsKeyboardController.deleteKeyboard
+GET     /cms/keyboard/create          @controllers.CmsKeyboardController.createKeyboard
+POST    /cms/keyboard-update          @controllers.CmsKeyboardController.updateKeyboard
+GET     /cms/study                    @controllers.CmsStudyController.index
+POST    /cms/study                    @controllers.CmsStudyController.update
+POST    /cms/study/addKeyboard        @controllers.CmsStudyController.addKeyboard
+POST    /cms/study/deleteKeyboard     @controllers.CmsStudyController.deleteKeyboard
+GET     /cms/demo/:userId             @controllers.AbstractionEventsDemoController.index(userId:String)
+
+# word categorization settings
+GET     /cms/categorylists            @controllers.CmsCategoryListController.index
+GET     /cms/categorybaselists/:id    @controllers.CmsCategoryListController.getBaselistDetails(id: String)
+POST    /cms/categorybaselist-delete  @controllers.CmsCategoryListController.deleteCategoryBaselist
+POST    /cms/categorybaselist-update  @controllers.CmsCategoryListController.updateCategoryBaselist
+GET     /cms/categorybaselist/create  @controllers.CmsCategoryListController.createCategoryBaselist
+GET     /cms/logicalcategorylists/:id @controllers.CmsCategoryListController.getLogicalCategoryListDetails(id: String)
+POST    /cms/logicalcategorylist-delete  @controllers.CmsCategoryListController.deleteLogicalCategoryList
+POST    /cms/logicalcategorylist-update  @controllers.CmsCategoryListController.updateLogicalCategoryList
+GET     /cms/logicalcategorylist/create  @controllers.CmsCategoryListController.createLogicalCategoryList
+GET     /cms/logicalcategorylist/addbaselist    @controllers.CmsCategoryListController.addBaselistToLogicalCategoryList
+GET     /cms/logicalcategorylist/removebaselist @controllers.CmsCategoryListController.removeBaselistFromLogicalCategoryList
+
+# word whitelist counter settings
+GET     /cms/wordlists            @controllers.CmsWordListController.index
+GET     /cms/wordbaselists/:id    @controllers.CmsWordListController.getBaselistDetails(id: String)
+POST    /cms/wordbaselist-delete  @controllers.CmsWordListController.deleteWordBaselist
+POST    /cms/wordbaselist-update  @controllers.CmsWordListController.updateWordBaselist
+GET     /cms/wordbaselist/create  @controllers.CmsWordListController.createWordBaselist
+GET     /cms/logicalwordlists/:id @controllers.CmsWordListController.getLogicalWordListDetails(id: String)
+POST    /cms/logicalwordlist-delete  @controllers.CmsWordListController.deleteLogicalWordList
+POST    /cms/logicalwordlist-update  @controllers.CmsWordListController.updateLogicalWordList
+GET     /cms/logicalwordlist/create  @controllers.CmsWordListController.createLogicalWordList
+GET     /cms/logicalwordlist/addbaselist    @controllers.CmsWordListController.addBaselistToLogicalWordList
+GET     /cms/logicalwordlist/removebaselist @controllers.CmsWordListController.removeBaselistFromLogicalWordList
+
+# Regex Pattern Matcher Settings
+GET     /cms/patternmatchers        @controllers.CmsPatternMatcherController.index
+GET     /cms/patternmatchers/:id     @controllers.CmsPatternMatcherController.getPatternMatcherDetails(id: String)
+POST    /cms/patternmatcher-delete  @controllers.CmsPatternMatcherController.deletePatternMatcher
+POST    /cms/patternmatcher-update  @controllers.CmsPatternMatcherController.updatePatternMatcher
+GET     /cms/patternmatcher/create  @controllers.CmsPatternMatcherController.createPatternMatcher
+
+# old version of dashboard - still there to show the work
+GET    /beta/dashboard                @controllers.DashboardController.index
+GET    /beta/dashboard/login          @controllers.DashboardLoginController.login
+GET    /beta/dashboard/logout         @controllers.DashboardLoginController.logout
+POST   /beta/dashboard/authenticate   @controllers.DashboardLoginController.authenticate

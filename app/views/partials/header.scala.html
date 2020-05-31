@@ -1,0 +1,36 @@
+@import models.PageGroupConstants
+@(page: PageGroupConstants)
+<div class="container">
+    <div class="collapse navbar-toggleable-xs" id="collapseMenu">
+        <ul class="nav navbar-nav">
+            <a class="navbar-brand hidden-xs-down" href="@routes.CmsDashboardController.index">
+                            ResearchIME</a>
+            <li class="nav-item @if(page == PageGroupConstants.USER){active}">
+                <a class="nav-link" href="@routes.CmsUserController.getUsers">User</a>
+            </li>
+            <li class="nav-item @if(page == PageGroupConstants.KEYBOARDS){active}">
+                <a class="nav-link" href="@routes.CmsKeyboardController.index">Keyboards</a>
+            </li>
+            <li class="nav-item @if(page == PageGroupConstants.STUDY){active}">
+                <a class="nav-link" href="@routes.CmsStudyController.index">Study</a>
+            </li>
+            <li class="nav-item @if(page == PageGroupConstants.CATEGORYLISTS){active}">
+                <a class="nav-link" href="@routes.CmsCategoryListController.index">Category Lists</a>
+            </li>
+            <li class="nav-item @if(page == PageGroupConstants.WORDLISTS){active}">
+                <a class="nav-link" href="@routes.CmsWordListController.index">Word Lists</a>
+            </li>
+            <li class="nav-item @if(page == PageGroupConstants.PATTERNMATCHERS){active}">
+                <a class="nav-link" href="@routes.CmsPatternMatcherController.index">Pattern Matchers</a>
+            </li>
+        </ul>
+        <div class="pull-right navbar-nav hidden-xs-down">
+            <a class="nav-link" href="@routes.CmsLoginController.logout"><i class="fa fa-sign-out"></i>
+                Sign out</a>
+        </div>
+        <div class="navbar-nav hidden-sm-up">
+            <a class="nav-link" href="@routes.CmsLoginController.logout"><i class="fa fa-sign-out"></i>
+                Sign out</a>
+        </div>
+    </div>
+</div>

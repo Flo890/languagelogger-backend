@@ -1,0 +1,142 @@
+@import controllers.CmsCategoryListController.CategoryBaseListAddConfig
+@import models.PageGroupConstants
+@(form: Form[CategoryBaseListAddConfig], categoryWordCount: Map[String, Integer], isNew: Boolean)
+<!DOCTYPE html>
+<html lang="de">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="author" content="ResearchIME Project">
+        <title>ResearchIME</title>
+        <link rel="apple-touch-icon" sizes="180x180" href="@routes.Assets.versioned("apple-touch-icon.png")">
+        <link rel="icon" type="image/png" href="@routes.Assets.versioned("favicon-32x32.png")">
+        <link rel="manifest" href="@routes.Assets.versioned("manifest.json")">
+        <link href="@routes.Assets.versioned("css/font-awesome.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/bootstrap.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/mdb.min.css")" rel="stylesheet">
+        <link href="@routes.Assets.versioned("css/cms.css")" rel="stylesheet">
+    </head>
+
+    <body>
+        <header>
+            <nav class="navbar navbar-dark default-color-dark">
+                <a class="hidden-sm-up navbar-brand" style="float: none;" href="@routes.CmsDashboardController.index">
+                    ResearchIME</a>
+                <button class="navbar-toggler hidden-sm-up" type="button" data-toggle="collapse" data-target="#collapseMenu">
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                @partials.header(PageGroupConstants.CATEGORYLISTS)
+            </nav>
+        </header>
+
+        <main>
+            <div class="container">
+                @if(flash.contains("success")) {
+                    <div class="card card-success">
+                        <div class="card-block">
+                            <h4 class="m-0 white-text">@flash.get("success")</h4>
+                        </div>
+                    </div>
+                    <hr>
+                }
+                @if(flash.contains("error")) {
+                    <div class="card card-danger">
+                        <div class="card-block">
+                            <h4 class="m-0 white-text">@flash.get("error")</h4>
+                        </div>
+                    </div>
+                    <hr>
+                }
+
+                @helper.form(routes.CmsCategoryListController.updateCategoryBaselist(), 'enctype -> "multipart/form-data") {
+                    <h4 class="h4-responsive">Category Baselist Settings</h4>
+                    <hr>
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card-block">
+                                    <div class="md-form">
+                                        <input type="text" id="formInfoTitle" class="form-control" name="baselistName" value="@form.data.get("baselistName")">
+                                        <label for="formInfoTitle">Name</label>
+                                    </div>
+                                    <div class="md-form">
+                                        <textarea type="text" id="formInfoMsg" class="md-textarea" name="description" value="@form.data.get("description")">@form.data.get("description")</textarea>
+                                        <label for="formInfoMsg">Description (optional)</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4 class="h4-responsive">Word-2-Category mapping file</h4>
+                    <hr>
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card-block">
+                                    @if(! isNew) {
+                                        <p>@form.data.get("mappingWordCount") words</p>
+                                        <div class="row d-flex align-content-start flex-wrap">
+                                        @for(categoryWordCountEntry <- categoryWordCount.entrySet()) {
+                                            <div class="card card-body col-sm-2 m-1 p-1">
+                                                <h4 class="card-title">@categoryWordCountEntry.getKey()</h4>
+                                                <p class="card-text">@categoryWordCountEntry.getValue() words</p>
+                                            </div>
+                                        }
+                                        </div>
+                                    }
+                                    <p>The file must be in the ResearchIME word-2-category mapping format</p>
+                                    <div class="md-form">
+                                        <input type="file" accept=".rime" id="catBaseListUpload" class="md-textarea" name="baselistFile" value="@form.data.get("uploadedFilename")">@form.data.get("uploadedFilename")</input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-group mb-3 pull-right">
+                        @if(! isNew){
+                            <button type="button" data-toggle="modal" data-target="#modalDelete" class="btn btn-danger">
+                                Löschen</button>
+                        }
+                        <button type="submit" class="ml-1 btn btn-success">Save</button>
+                    </div>
+                    <input type="hidden" id="formId" class="form-control" name="baselistId" value="@form.data.get("baselistId")">
+                    }
+            </div>
+
+            <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">Delete baselist</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h3 class="mb-1">Do you really want to delete this baselist?</h3>
+                            @helper.form(routes.CmsCategoryListController.deleteCategoryBaselist) {
+                                <fieldset>
+                                    <input type="hidden" name="baselistId" value="@form.data.get("baselistId")">
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </div>
+                                </fieldset>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <script type="text/javascript" src="@routes.Assets.versioned("js/jquery.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/tether.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/bootstrap.min.js")"></script>
+        <script type="text/javascript" src="@routes.Assets.versioned("js/mdb.min.js")"></script>
+    </body>
+
+</html>
