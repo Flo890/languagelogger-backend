@@ -75,6 +75,7 @@ create table keyboard_layout (
   name                      varchar(255),
   is_tracking_enabled       tinyint(1) default 0,
   show_hand_prompt          tinyint(1) default 0,
+  anonymize_input_events    tinyint(1) default 0,
   info_title                varchar(255),
   info_message              varchar(255),
   constraint pk_keyboard_layout primary key (layout_id))
@@ -140,7 +141,7 @@ create table message_statistics (
   input_target_app          varchar(255),
   timestamp_type_start      bigint,
   timestamp_type_end        bigint,
-  field_hint_text           varchar(1024),
+  field_hint_text           varchar(255),
   constraint pk_message_statistics primary key (id))
 ;
 

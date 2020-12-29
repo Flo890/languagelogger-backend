@@ -8,6 +8,6 @@ target
 /RUNNING_PID
 /.DS_Store
 researchdb
-/.researchime-1.0-SNAPSHOT
+/.languagelogger-1.0-SNAPSHOT
 
-!target/universal/researchime-1.0-SNAPSHOT.zip
+!target/universal/languagelogger-1.0-SNAPSHOT.zip

@@ -1,4 +1,4 @@
-name := """researchime"""
+name := """languagelogger"""
 
 version := "1.0-SNAPSHOT"
 

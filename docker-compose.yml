@@ -9,10 +9,10 @@ services:
     links:
       - researchime-db
     environment:
-      - DB_USERNAME=root
-      - DB_PASSWORD=researchime
+      - DB_USERNAME=languagelogger
+      - DB_PASSWORD=G8BCjNk
       - APPLICATION_SECRET=researchime
-      - DB_URL=jdbc:mysql://researchime-db/researchimedb?characterEncoding=UTF8&connectionCollation=utf8mb4_general_ci&verifyServerCertificate=false&useSSL=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      - DB_URL=jdbc:mysql://researchime-db/languageloggerdb?characterEncoding=UTF8&connectionCollation=utf8mb4_general_ci&verifyServerCertificate=false&useSSL=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
 
   researchime-db:
     image: mysql:5.7
@@ -21,5 +21,5 @@ services:
     command: ['mysqld', '--character-set-server=utf8mb4']
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: researchime
-      MYSQL_DATABASE: researchimedb
+      MYSQL_ROOT_PASSWORD: G8BCjNk
+      MYSQL_DATABASE: languageloggerdb
