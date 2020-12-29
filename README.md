@@ -174,8 +174,89 @@ On this page you can create and configure keyboards. There are 3 checkboxes at t
 * `Anonymize Input Events` If checked, touch events will be stored with obscured data. That means, e.g. the code of a key pressed is not stored (words cannot be reconstructed) in a bigram manner. If this is NOT checked raw touch events will be saved, what might violate participant privacy!
 
 ## Word Categorization
+### How does it work and why is it useful?
+The researcher configures a list of words, each mapped to a category. For each typed word, the app checks whether a category is listed for that word. If yes, an event of that category is logged. Otherwise, an event of category `unknown`is logged. 
+
+For example the words `dog` and `cat` could both be mapped to the category `animal`. If the user types `My cat and dog are good friends` a series of categories like `unknown`,`animal`,`unknown`,`animal`,`unknown`,`unknown`,`unknown` is logged. Thus the research can study how much one is texting about animals, without knowing the precise content or full sentence. 
+
+Each category event is related to a so called "Message Statistics" instance, which is a meta object for each typing session. It holds meta data like timestamps, the target app, character counts, ...
+
+### How to configure it
+
+`http://localhost:9000/cms/categorylists`
+
+The configuration works with physical- logical word lists, for easier updatability.
+#### Step 1: Import word -> category mapping
+Hit the `Add Category Baselist` button, then you see the config page. Upload a word to category mapping file that looks like the following:
+```
+[type=word2category]
+cat	animal
+dog	animal
+elephant	animal
+fish	animal
+horse	animal
+tree	plant
+flower	plant
+grass	plant
+bush	plant
+```
+_demodata/word-categories_plants-and-animals.rime_
+
+Important notes:
+* Each line maps one word to one category. Thus, each word should occur only once
+* Word and category mus be separated by a Tab (no spaces!)
+* Although the backend would support splitted-words (e.g. the word `palm tree`), the app currently does not. Thus you should use only words that "are one" (e.g. `palmtree`)
+* Multiple categories for one word are not supported. But there's a good workaround: Specify multiple categories comma-separated. Technically they are treated as one, but you can work with them as multiple in your data preprocessing. (e.g. `dog    animal,pet`).
+
+#### Step 2: Assemble a logical list
+
+A logical list consists of one or multiple physical lists. For example you could have uploaded a (physical) list of dogs, and another (physical) list of cats, and combine them to one logical list `animals`. The advantage: When the dogs list in the future will be updated, you simply re-upload that list.
+Only logical lists are actually applied in the app! Without any logical list, no word categorization will happen!
 
 ## Word Frequency Counting
+### How does it work and why is it useful?
+The researcher configures a list of words, whose occurrences should be counted. As only a count table over the full study duration is saved, and only words listed in the configuration (whitelist) are counted, this is way more privacy preserving than equivalent offline analyses that require to log full messages.
+
+### How to configure it
+`http://localhost:9000/cms/wordlists`
+Equivalent to the Word Categorization, a structure of phyiscal and logical lists is used (read above).
+
+#### Step 1: Import a list of words
+It should look like this:
+```
+[type=words]
+walmart
+amazon
+supermarket
+```
+_demodata/dictionary-markets.rime_
+
+Important Notes:
+* Each line must contain one word
+* Although the backend would support splitted-words (e.g. the word `palm tree`), the app currently does not. Thus you should use only words that "are one" (e.g. `palmtree`)
+
+#### Step 2: Assemble a logical list
+
+Only logical lists are actually applied in the app! Without any logical list, no word categorization will happen!
+
 
 ## Regular Expression Matching
+### How does it work and why is it useful?
 
+To log e.g. emojis it would be cumbersome to create a list of all existant emojis - they could way easier be detected with a regular expression. For other types of data, e.g. phonenumbers, it would be impossible to create a list of all phonenumbers. Thus, one can configure regular expressions. Each typed word is checked whether it matches the configured regular expressions. If yes, a category event is saved, or optionally the raw word (a.k.a emoji / phonenumber)
+
+### How to configure it
+`http://localhost:9000/cms/patternmatchers`
+
+Enter a regular expression, e.g. 
+```
+[\uD83C-\uDBFF\uDC00-\uDFFF]+
+```
+_demodata/emojimatcher_
+
+to match the unicode range of emojis.
+
+
+# The Log Data Structure
+
+TODO
