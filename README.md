@@ -1,18 +1,35 @@
+
+
+
 # Language Logger Research App: Backend
 
-Welcome to the repo for the LanguageLogger app's backend. In order to conduct user studies the system consists an Android App and a  Web Server, which communicates with all the users smartphones but and allows the researcher to setup his study aswell as get overview of the collected keyboard events in form of an web interface.
+Language Logger is a research tool that enables studies on mobile language use in the wild. The LanguageLogger Android app can be installed on study participants' smartphones. The app logs when the user tyes words of predefined categories (either just the category name or the raw word), count word frequencies, and log the usage of words that match a regular expression.
+
+With this on-device language abstraction approach, typed language on smartphones can be observed in the wild, without the need to log raw, privacy-invasive text data.
+Furthermore it is also possible to log touch data (typing speed, touch positions, ...), used messenger apps, and configure custom keyboard layouts for each study condition.
+
+![Evolutions database migration](./images/paperteaser.jpg)
+
+Please checkout the research papers about this tool for more details:
+
+* [Bemmann, Buschek 2020. LanguageLogger: A Mobile Keyboard Application for Studying Language Use in Everyday Text Communication in the Wild](https://dl.acm.org/doi/pdf/10.1145/3397872)
+
+* [Buschek, Bisinger, Alt 2018. ResearchIME: A mobile keyboard application for studying free typing behaviour in the wild](https://dl.acm.org/doi/abs/10.1145/3173574.3173829)
+
+
+This GitHub project contains the backend of the research tool LanguageLogger. It is necessary to manage the study configuration, and record the logged data.
 
 The repository for the Android App can be found here:
 
 https://github.com/Flo890/languagelogger-app
 
 
-# Server
+# Setup Server
 The server consists a web app based on Play Java 2.5.3 and a MySQL Database
 
 ## For Development: Deploy locally
 
-Prerequistities:
+### Prerequistities
 * jdk 8 (jdk 9 is not supported)
 
 ### Step 1: Setup MySQL Server
@@ -99,6 +116,8 @@ To quick-start, import the file `demodata/plants-animals-shop-config.sql` into y
 
 * `mysql -u languagelogger -p languageloggerdb < demodata/plants-animals-shop-config.sql`
 
+To learn how to configure LanguageLogger for your research study read the Section `Research Configuration` below.
+
 ### Additional settings
 By editing the file `conf/application.conf` u can modify further settings for example:
 * Changing database user and password:
@@ -130,5 +149,33 @@ jdk 8 (jdk 9 is not supported)
 
 
 
+# Research Configuration
 
+## General Study Settings
+
+`http://localhost:9000/cms/study`
+
+On this page you have to set the study duration (e.g. 14 days). On the very bottom, you have to choose a keyboard used for this study. Usually you would set it to the same duration as the study.
+
+If you conduct a within-subject study with e.g. two conditions, you could also add one keyboard with e.g. 7 days duration, and a different keyboard with another 7 days.
+
+Setting study name and welcome message is obligatory.
+
+## Keyboards
+
+`http://localhost:9000/cms/keyboards`
+
+On this page you can create and configure keyboards. There are 3 checkboxes at the top:
+* `Ask for hand posture` If checked, an overlay will be prompted when the keyboard opens, where the user has to specify which fingers he is currently using for typing
+
+![Hand Posture Overlay](images/handposture.png)
+
+* `Tracking` If NOT checked NO data will be logged at all
+* `Anonymize Input Events` If checked, touch events will be stored with obscured data. That means, e.g. the code of a key pressed is not stored (words cannot be reconstructed) in a bigram manner. If this is NOT checked raw touch events will be saved, what might violate participant privacy!
+
+## Word Categorization
+
+## Word Frequency Counting
+
+## Regular Expression Matching
 
