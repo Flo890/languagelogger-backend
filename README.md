@@ -75,7 +75,7 @@ On Windows you can usually just run
      
 * Open `http://localhost:9000/cms/login` in browser.
 
-* You might see a red warning page, telling you that your database layout does not fit. Hit the "Apply" to initialize the database layout. **Attention: This will delete all tables and data in `languageloggerdb`!**
+* You might see a red warning page, telling you that your database layout does not fit. Hit the "Apply this script now" button to initialize the database layout. **Attention: This will delete all tables and data in `languageloggerdb`!**
 
 * After a short while you should see the login page:
 
@@ -95,7 +95,9 @@ Usually you will not be able to access a locally setup backend from an Android s
 
 ### Step 4: Configure LanguageLogger abstraction logic
 
-TODO 
+To quick-start, import the file `demodata/plants-animals-shop-config.sql` into your database:
+
+* `mysql -u languagelogger -p languageloggerdb < demodata/plants-animals-shop-config.sql`
 
 ### Additional settings
 By editing the file `conf/application.conf` u can modify further settings for example:
