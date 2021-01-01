@@ -3,9 +3,9 @@
 
 # Language Logger Research App: Backend
 
-Language Logger is a research tool that enables studies on mobile language use in the wild. The LanguageLogger Android app can be installed on study participants' smartphones. The app logs when the user tyes words of predefined categories (either just the category name or the raw word), count word frequencies, and log the usage of words that match a regular expression.
+Language Logger is a research tool that enables **studies on mobile language use in the wild**. The LanguageLogger Android app can be installed on study participants' smartphones, where it replaces the smartphone's keyboard. **The app logs** when the user tyes words of predefined **word categories** (either just the category name or the raw word), count **word frequencies**, and log the usage of words that match a **regular expression**.
 
-With this on-device language abstraction approach, typed language on smartphones can be observed in the wild, without the need to log raw, privacy-invasive text data.
+With this on-device language abstraction approach, **typed language on smartphones can be observed in the wild in a privacy-friendly manner**. No raw text data leaves the user's device.
 Furthermore it is also possible to log touch data (typing speed, touch positions, ...), used messenger apps, and configure custom keyboard layouts for each study condition.
 
 ![Evolutions database migration](./images/paperteaser.jpg)
