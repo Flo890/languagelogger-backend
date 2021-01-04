@@ -15,13 +15,13 @@
 /*!40000 ALTER TABLE `category_base_list` DISABLE KEYS */;
 INSERT INTO `category_base_list` (`baselist_id`, `baselist_name`, `description`, `uploaded_filename`) VALUES
 	(2, 'Animals and Plants', 'All plants and animals relevant for my research project.', 'word-categories_plants-and-animals.rime'),
-	(3, 'Economic words', 'Words that express a shopping action', 'word-category-economic.rime');
+	(3, 'Shopping words', 'Words that express a shopping action', 'word-category-shopping.rime');
 /*!40000 ALTER TABLE `category_base_list` ENABLE KEYS */;
 
 -- Exportiere Daten aus Tabelle languageloggerdb.logical_category_list: ~1 rows (ungefähr)
 /*!40000 ALTER TABLE `logical_category_list` DISABLE KEYS */;
 INSERT INTO `logical_category_list` (`logicallist_id`, `logicallist_name`, `description`, `preappy_lemma_extraction`, `active`) VALUES
-	(1, 'Plants, Animals, Shopping', 'A combination of both my plants and animals list, and the economic words.', 1, 1);
+	(1, 'Plants, Animals, Shopping', 'A combination of both my plants and animals list, and the shopping words.', 1, 1);
 /*!40000 ALTER TABLE `logical_category_list` ENABLE KEYS */;
 
 -- Exportiere Daten aus Tabelle languageloggerdb.logical_category_list_category_base_list: ~2 rows (ungefähr)
@@ -69,10 +69,10 @@ INSERT INTO `word2category_mapping` (`id`, `word`, `category`, `category_base_li
 	(20, 'flower', 'plant', 2),
 	(21, 'grass', 'plant', 2),
 	(22, 'bush', 'plant', 2),
-	(23, 'buy', 'economic', 3),
-	(24, 'bought', 'economic', 3),
-	(25, 'shopping', 'economic', 3),
-	(26, 'shopping', 'economic', 3);
+	(23, 'buy', 'shopping', 3),
+	(24, 'bought', 'shopping', 3),
+	(25, 'shopping', 'shopping', 3),
+	(26, 'shopping', 'shopping', 3);
 /*!40000 ALTER TABLE `word2category_mapping` ENABLE KEYS */;
 
 -- Exportiere Daten aus Tabelle languageloggerdb.word_base_list: ~1 rows (ungefähr)
