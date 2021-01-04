@@ -102,7 +102,7 @@ On Windows you can usually just run
 
     The default password is: `$LL773`
     
-### Step 3 (eventually): Reverse Proxy
+### Step 3 (local testing only): Reverse Proxy
 
 Usually you will not be able to access a locally setup backend from an Android smartphone. For development purposes, we suggest to use the reverse proxy ngrok:
 
