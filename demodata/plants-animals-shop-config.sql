@@ -52,8 +52,8 @@ INSERT INTO `pattern_matcher_config` (`regex_matcher_id`, `regex_matcher_name`, 
 -- Exportiere Daten aus Tabelle languageloggerdb.word: ~3 rows (ungefähr)
 /*!40000 ALTER TABLE `word` DISABLE KEYS */;
 INSERT INTO `word` (`id`, `word`, `word_base_list_baselist_id`) VALUES
-	(1, 'walmart', 1),
-	(2, 'amazon', 1),
+	(1, 'Walmart', 1),
+	(2, 'Amazon', 1),
 	(3, 'supermarket', 1);
 /*!40000 ALTER TABLE `word` ENABLE KEYS */;
 

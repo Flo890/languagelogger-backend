@@ -234,6 +234,7 @@ _demodata/dictionary-markets.rime_
 Important Notes:
 * Each line must contain one word
 * Although the backend would support splitted-words (e.g. the word `palm tree`), the app currently does not. Thus you should use only words that "are one" (e.g. `palmtree`)
+* The matching is case-sensitive
 
 #### Step 2: Assemble a logical list
 
