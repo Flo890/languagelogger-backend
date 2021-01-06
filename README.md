@@ -225,8 +225,8 @@ Equivalent to the Word Categorization, a structure of phyiscal and logical lists
 It should look like this:
 ```
 [type=words]
-walmart
-amazon
+Walmart
+Amazon
 supermarket
 ```
 _demodata/dictionary-markets.rime_
@@ -257,7 +257,23 @@ _demodata/emojimatcher_
 
 to match the unicode range of emojis.
 
+## Further Configuration
+
+There are some configuration files in the backend project's `conf` directory. Most files contain just default-configuration data that will be imported on initial startup, despite these:
+* `application.conf`: General configuration of the backend application. Here you e.g. can (and should) change the default login of the backend, and database name and credentials
+* `client.conf`: Logging settings for the Android app, regarding the sensors. You can configure which sensors (accelerometer, gyroscope, ...) should be logged and with which samling frequencies
 
 # The Log Data Structure
 
-TODO
+In the file `demodata/demo-resulting-logdata.sql` you can find some example logdata of one text entry. Import it into your local database server with 
+
+`mysql -u languagelogger -p languageloggerdb < demodata/plants-animals-shop-config.sql`
+
+(will create a new database `languageloggerdb_demologdata`)
+
+The relevant tables are:
+* `message_statistics`: One entry per typing session (e.g. writing one email)
+* `abstracted_action_events`: One entry per typed word per configured logical category list and regular expression matcher. Belongs to one message_statistics entry
+* `word_frequency`: Contains word frequency counts
+* `event`: Contains touch events. (If you didn't change the configuration, most properties are null for privacy reasons. See Section _Research Configuration -> Keyboards_)
+* `sensor`: Each line contains data of one sensor belonging to one event entry (see `conf/client.conf` to lookup the sensors with the table's _type_ property)
