@@ -36,7 +36,9 @@ public class ConfigItemBuilder {
 
     private static ConfigItem createFromLocalConfig(){
         Configuration config = Play.current().injector().instanceOf(Configuration.class);
-        return create(Json.toJson(config.getObject("config.research")));
+        ConfigItem item = create(Json.toJson(config.getObject("config.research")));
+        item.addKeyboard(new KeyboardConfigItem("1", config.getConfig("config").getConfig("research").getInt("studyDuration"))); // add default keyboard to default study
+        return item;
     }
 
     private static ConfigItem create(JsonNode json){

@@ -155,7 +155,7 @@ jdk 8 (jdk 9 is not supported)
 
 `http://localhost:9000/cms/study`
 
-On this page you have to set the study duration (e.g. 14 days). On the very bottom, you have to choose a keyboard used for this study. Usually you would set it to the same duration as the study.
+On this page you have to set the study duration (a default study of 14 days is preconfigured). On the very bottom, you have to choose a keyboard used for this study. Usually you would set it to the same duration as the study.
 
 If you conduct a within-subject study with e.g. two conditions, you could also add one keyboard with e.g. 7 days duration, and a different keyboard with another 7 days.
 
