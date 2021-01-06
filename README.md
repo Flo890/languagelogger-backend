@@ -8,7 +8,7 @@ Language Logger is a research tool that enables **studies on mobile language use
 With this on-device language abstraction approach, **typed language on smartphones can be observed in the wild in a privacy-friendly manner**. No raw text data leaves the user's device.
 Furthermore it is also possible to log touch data (typing speed, touch positions, ...), used messenger apps, and configure custom keyboard layouts for each study condition.
 
-![Evolutions database migration](./images/paperteaser.jpg)
+![Evolutions database migration](./images/paperteaser.JPG)
 
 Please checkout the research papers about this tool for more details:
 
